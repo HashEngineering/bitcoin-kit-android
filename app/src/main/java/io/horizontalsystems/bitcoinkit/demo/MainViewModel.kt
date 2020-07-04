@@ -11,13 +11,13 @@ import io.horizontalsystems.bitcoincore.models.BalanceInfo
 import io.horizontalsystems.bitcoincore.models.BlockInfo
 import io.horizontalsystems.bitcoincore.models.TransactionDataSortType
 import io.horizontalsystems.bitcoincore.models.TransactionInfo
-import io.horizontalsystems.bitcoinkit.BitcoinKit
+import io.horizontalsystems.indexchainkit.IndexChainKit
 import io.horizontalsystems.hodler.HodlerData
 import io.horizontalsystems.hodler.HodlerPlugin
 import io.horizontalsystems.hodler.LockTimeInterval
 import io.reactivex.disposables.CompositeDisposable
 
-class MainViewModel : ViewModel(), BitcoinKit.Listener {
+class MainViewModel : ViewModel(), IndexChainKit.Listener {
 
     enum class State {
         STARTED, STOPPED
@@ -38,17 +38,17 @@ class MainViewModel : ViewModel(), BitcoinKit.Listener {
             status.value = (if (value) State.STARTED else State.STOPPED)
         }
 
-    private lateinit var bitcoinKit: BitcoinKit
+    private lateinit var bitcoinKit: IndexChainKit
 
     private val walletId = "MyWallet"
-    private val networkType = BitcoinKit.NetworkType.MainNet
+    private val networkType = IndexChainKit.NetworkType.MainNet
     private val syncMode = BitcoinCore.SyncMode.Api()
     private val bip = Bip.BIP44
 
     fun init() {
         val words = "used ugly meat glad balance divorce inner artwork hire invest already piano".split(" ")
 
-        bitcoinKit = BitcoinKit(App.instance, words, walletId, networkType, syncMode = syncMode, bip = bip)
+        bitcoinKit = IndexChainKit(App.instance, words, walletId, networkType, syncMode = syncMode, bip = bip)
 
         bitcoinKit.listener = this
 
@@ -76,7 +76,7 @@ class MainViewModel : ViewModel(), BitcoinKit.Listener {
 
     fun clear() {
         bitcoinKit.stop()
-        BitcoinKit.clear(App.instance, networkType, walletId)
+        IndexChainKit.clear(App.instance, networkType, walletId)
 
         init()
     }
@@ -87,7 +87,7 @@ class MainViewModel : ViewModel(), BitcoinKit.Listener {
     }
 
     //
-    // BitcoinKit Listener implementations
+    // IndexChainKit Listener implementations
     //
     override fun onTransactionsUpdate(inserted: List<TransactionInfo>, updated: List<TransactionInfo>) {
         bitcoinKit.transactions().subscribe { txList: List<TransactionInfo> ->

@@ -1,3 +1,4 @@
+include ':indexchainkit'
 include ':app',             // Demo app
         ':bitcoincore',     // Bitcoin Core
         ':bitcoinkit',      // Bitcoin kit

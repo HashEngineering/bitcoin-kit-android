@@ -20,7 +20,7 @@ import io.horizontalsystems.dashkit.X11Hasher
 import java.util.*
 import java.util.concurrent.Executors
 
-class CheckpointSyncer(
+open class CheckpointSyncer(
         private val network: Network,
         private val checkpointInterval: Int,
         private val checkpointsToKeep: Int,
@@ -37,10 +37,10 @@ class CheckpointSyncer(
     @Volatile
     private var syncPeer: Peer? = null
     private val peersQueue = Executors.newSingleThreadExecutor()
-    private val peerManager = PeerManager()
+    protected val peerManager = PeerManager()
 
-    private val peerSize = 2
-    private val peerGroup: PeerGroup
+    protected val peerSize = 2
+    protected var peerGroup: PeerGroup
 
     private val lastCheckpointBlock = network.lastCheckpoint.block
     private val checkpoints = mutableListOf(lastCheckpointBlock)

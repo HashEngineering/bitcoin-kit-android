@@ -50,7 +50,7 @@ class VersionMessage(val protocolVersion: Int, val services: Long, val timestamp
     }
 }
 
-class VersionMessageParser : IMessageParser {
+open class VersionMessageParser : IMessageParser {
     override val command: String = "version"
 
     override fun parseMessage(payload: ByteArray): IMessage {
@@ -78,7 +78,7 @@ class VersionMessageParser : IMessageParser {
     }
 }
 
-class VersionMessageSerializer : IMessageSerializer {
+open class VersionMessageSerializer : IMessageSerializer {
     override val command: String = "version"
 
     override fun serialize(message: IMessage): ByteArray? {

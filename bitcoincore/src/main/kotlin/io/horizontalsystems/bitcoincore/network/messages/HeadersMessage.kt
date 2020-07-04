@@ -7,13 +7,13 @@ import io.horizontalsystems.bitcoincore.io.BitcoinOutput
 import io.horizontalsystems.bitcoincore.storage.BlockHeader
 import java.io.ByteArrayInputStream
 
-class HeadersMessage(val headers: Array<BlockHeader>) : IMessage {
+open class HeadersMessage(val headers: Array<BlockHeader>) : IMessage {
     override fun toString(): String {
         return "HeadersMessage(${headers.size}:[${headers.joinToString { it.hash.toReversedHex() }}])"
     }
 }
 
-class HeadersMessageParser(private val hasher: IHasher) : IMessageParser {
+open class HeadersMessageParser(private val hasher: IHasher) : IMessageParser {
     override val command: String = "headers"
 
     override fun parseMessage(payload: ByteArray): IMessage {
@@ -46,7 +46,7 @@ class HeadersMessageParser(private val hasher: IHasher) : IMessageParser {
     }
 }
 
-class HeadersMessageSerializer : IMessageSerializer {
+open class HeadersMessageSerializer : IMessageSerializer {
     override val command: String = "headers"
 
     override fun serialize(message: IMessage): ByteArray? {

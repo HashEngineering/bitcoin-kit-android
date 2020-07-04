@@ -7,7 +7,7 @@ import io.horizontalsystems.bitcoincore.extensions.toHexString
 import io.horizontalsystems.bitcoincore.models.*
 import io.horizontalsystems.bitcoincore.transactions.scripts.ScriptType
 
-open class Storage(protected open val store: CoreDatabase) : IStorage {
+open class Storage(protected open val store: CoreDatabase, val blockHashLimit: Int = 500) : IStorage {
 
     // RestoreState
 
@@ -40,7 +40,9 @@ open class Storage(protected open val store: CoreDatabase) : IStorage {
         store.peerAddress.setConnectionTime(time, ip)
     }
 
-    // BlockHash
+    override fun getBlockHashesLimit(): Int {
+        return blockHashLimit
+    }
 
     override fun getBlockHashesSortedBySequenceAndHeight(limit: Int): List<BlockHash> {
         return store.blockHash.getBlockHashesSortedSequenceHeight(limit)

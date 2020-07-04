@@ -24,7 +24,7 @@ interface IStorage {
     fun setPeerConnectionTime(ip: String, time: Long)
 
     //  BlockHash
-
+    fun getBlockHashesLimit(): Int
     fun getBlockHashesSortedBySequenceAndHeight(limit: Int): List<BlockHash>
     fun getBlockHashHeaderHashes(): List<ByteArray>
     fun getBlockHashHeaderHashes(except: List<ByteArray>): List<ByteArray>

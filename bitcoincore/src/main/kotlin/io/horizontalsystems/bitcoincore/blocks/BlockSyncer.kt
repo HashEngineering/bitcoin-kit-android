@@ -65,7 +65,7 @@ class BlockSyncer(
     }
 
     fun getBlockHashes(): List<BlockHash> {
-        return storage.getBlockHashesSortedBySequenceAndHeight(limit = 500)
+        return storage.getBlockHashesSortedBySequenceAndHeight(limit = storage.getBlockHashesLimit())
     }
 
     fun getBlockLocatorHashes(peerLastBlockHeight: Int): List<ByteArray> {

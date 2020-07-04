@@ -6,7 +6,7 @@ import io.horizontalsystems.bitcoincore.models.*
 import io.horizontalsystems.bitcoincore.serializers.TransactionSerializer
 import io.horizontalsystems.bitcoincore.utils.HashUtils
 
-class BlockHeader(
+open class BlockHeader(
         val version: Int,
         val previousBlockHeaderHash: ByteArray,
         val merkleRoot: ByteArray,

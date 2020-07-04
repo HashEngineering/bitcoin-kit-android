@@ -40,6 +40,9 @@ class BitcoinCoreBuilder {
     private var blockHeaderHasher: IHasher? = null
     private var transactionInfoConverter: ITransactionInfoConverter? = null
     private var blockValidator: IBlockValidator? = null
+    private var blockHeaderParser: BlockHeaderParser? = null
+    private var versionMessageParser: VersionMessageParser? = null
+    private var versionMessageSerializer: VersionMessageSerializer? = null
 
     // parameters with default values
     private var confirmationsThreshold = 6
@@ -119,6 +122,21 @@ class BitcoinCoreBuilder {
 
     fun addPlugin(plugin: IPlugin): BitcoinCoreBuilder {
         plugins.add(plugin)
+        return this
+    }
+
+    fun setBlockHeaderParser(blockHeaderParser: BlockHeaderParser): BitcoinCoreBuilder {
+        this.blockHeaderParser = blockHeaderParser
+        return this
+    }
+
+    fun setVersionMessageParser(versionMessageParser: VersionMessageParser): BitcoinCoreBuilder {
+        this.versionMessageParser = versionMessageParser
+        return this
+    }
+
+    fun setVersionMessageSerializer(versionMessageSerializer: VersionMessageSerializer): BitcoinCoreBuilder {
+        this.versionMessageSerializer = versionMessageSerializer
         return this
     }
 
@@ -250,15 +268,24 @@ class BitcoinCoreBuilder {
 
         // this part can be moved to another place
 
+        if (blockHeaderParser == null)
+            blockHeaderParser = BlockHeaderParser(blockHeaderHasher)
+
+        if (versionMessageParser == null)
+            versionMessageParser = VersionMessageParser()
+
+        if (versionMessageSerializer == null)
+            versionMessageSerializer = VersionMessageSerializer()
+
         bitcoinCore.addMessageParser(AddrMessageParser())
-                .addMessageParser(MerkleBlockMessageParser(BlockHeaderParser(blockHeaderHasher)))
+                .addMessageParser(MerkleBlockMessageParser(blockHeaderParser!!))
                 .addMessageParser(InvMessageParser())
                 .addMessageParser(GetDataMessageParser())
                 .addMessageParser(PingMessageParser())
                 .addMessageParser(PongMessageParser())
                 .addMessageParser(TransactionMessageParser())
                 .addMessageParser(VerAckMessageParser())
-                .addMessageParser(VersionMessageParser())
+                .addMessageParser(versionMessageParser!!)
                 .addMessageParser(RejectMessageParser())
 
         bitcoinCore.addMessageSerializer(FilterLoadMessageSerializer())
@@ -270,7 +297,7 @@ class BitcoinCoreBuilder {
                 .addMessageSerializer(PongMessageSerializer())
                 .addMessageSerializer(TransactionMessageSerializer())
                 .addMessageSerializer(VerAckMessageSerializer())
-                .addMessageSerializer(VersionMessageSerializer())
+                .addMessageSerializer(versionMessageSerializer!!)
 
         val bloomFilterLoader = BloomFilterLoader(bloomFilterManager, peerManager)
         bloomFilterManager.listener = bloomFilterLoader
